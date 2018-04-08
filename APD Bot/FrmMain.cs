@@ -59,7 +59,7 @@ namespace APD_Bot
             dgvChargesList.Rows.Add(new object[] { "Insurance Fraud", 0, 1500 });
             dgvChargesList.Rows.Add(new object[] { "Kidnapping", 0, 11250 });
             dgvChargesList.Rows.Add(new object[] { "Kidnapping a Government Official", 0, 92750 });
-            dgvChargesList.Rows.Add(new object[] { "L.E.O. Manslaughter", 0, 37500 });
+            dgvChargesList.Rows.Add(new object[] { "L E O Manslaughter", 0, 37500 });
             dgvChargesList.Rows.Add(new object[] { "Manslaughter", 0, 30000 });
             dgvChargesList.Rows.Add(new object[] { "Misuse Of Emergency", 0, 40000 });
             dgvChargesList.Rows.Add(new object[] { "Obstruction Of Justice", 0, 15750 });
@@ -271,7 +271,7 @@ namespace APD_Bot
 
         private void btnEngage_Click(object sender, EventArgs e)
         {
-            Speak("A.P.D Hands up or be taysd");
+            Speak("APD Hands up or be taysd");
         }
 
         private void btnComms_Click(object sender, EventArgs e)
