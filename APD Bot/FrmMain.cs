@@ -5,6 +5,7 @@ using NAudio.Wave;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections;
+using System.Threading;
 
 namespace APD_Bot
 {
@@ -12,6 +13,9 @@ namespace APD_Bot
     {   
         SpeechSynthesizer speech;
         KeyboardHook kbdHook;
+        WaveFileReader reader;
+        WaveOut waveOut;
+        MemoryStream stream;
         public FrmMain()
         {
             InitializeComponent();
@@ -104,8 +108,9 @@ namespace APD_Bot
         private void SetupVoices()
         {
             speech = new SpeechSynthesizer();
-            speech.SpeakStarted += SpeechSynthesizerObj_SpeakStarted;
-            speech.SpeakCompleted += SpeechSynthesizerObj_SpeakCompleted;
+            speech.StateChanged += Speech_StateChanged;
+            speech.SpeakCompleted += Speech_SpeakCompleted;
+            speech.SpeakStarted += Speech_SpeakStarted;
             foreach (InstalledVoice voice in speech.GetInstalledVoices())
             {
                 cbVoices.Items.Add(voice.VoiceInfo.Name);
@@ -114,6 +119,46 @@ namespace APD_Bot
             {
                 if (cbVoices.Items[i].ToString().Contains(Properties.Settings.Default.VoiceName))
                     cbVoices.SelectedIndex = i;
+            }
+        }
+
+        private void Speech_SpeakStarted(object sender, SpeakStartedEventArgs e)
+        {
+            btnComms.Enabled = false;
+            btnEngage.Enabled = false;
+            btnIllegal.Enabled = false;
+            btnJail.Enabled = false;
+            btnLicenses.Enabled = false;
+            btnSeize.Enabled = false;
+            btnTicket1.Enabled = false;
+            btnTicket2.Enabled = false;
+            btnWaitTime.Enabled = false;
+            btnCustom.Enabled = false;
+        }
+
+        private void Speech_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
+        {
+            AudioDevice device = (AudioDevice)cbAudio.SelectedItem;
+            stream.Seek(0, SeekOrigin.Begin);
+            reader = new WaveFileReader(stream);
+            waveOut = new WaveOut
+            {
+                DeviceNumber = device.DeviceNumber,
+            };
+            waveOut.PlaybackStopped += WaveOut_PlaybackStopped;
+            waveOut.Init(reader);
+            waveOut.Play();
+        }
+
+        private void Speech_StateChanged(object sender, StateChangedEventArgs e)
+        {
+            Loop:
+            while (speech.State == SynthesizerState.Speaking)
+            {
+                goto Loop;
+            }
+            if (speech.State == SynthesizerState.Ready)
+            {
             }
         }
 
@@ -184,33 +229,6 @@ namespace APD_Bot
                     break;
             }
         }
-        private void SpeechSynthesizerObj_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
-        {
-            btnComms.Enabled = true;
-            btnEngage.Enabled = true;
-            btnIllegal.Enabled = true;
-            btnJail.Enabled = true;
-            btnLicenses.Enabled = true;
-            btnSeize.Enabled = true;
-            btnTicket1.Enabled = true;
-            btnTicket2.Enabled = true;
-            btnWaitTime.Enabled = true;
-            btnCustom.Enabled = true;
-        }
-
-        private void SpeechSynthesizerObj_SpeakStarted(object sender, SpeakStartedEventArgs e)
-        {
-            btnComms.Enabled = false;
-            btnEngage.Enabled = false;
-            btnIllegal.Enabled = false;
-            btnJail.Enabled = false;
-            btnLicenses.Enabled = false;
-            btnSeize.Enabled = false;
-            btnTicket1.Enabled = false;
-            btnTicket2.Enabled = false;
-            btnWaitTime.Enabled = false;
-            btnCustom.Enabled = false;
-        }
 
         private void dgvChargesList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -227,22 +245,31 @@ namespace APD_Bot
             Properties.Settings.Default.DeviceName = device.DeviceName;
             Properties.Settings.Default.DeviceNumber = device.DeviceNumber;
         }
-        private void Speak(string text)
+        private  void Speak(string text)
         {
-            AudioDevice device = (AudioDevice)cbAudio.SelectedItem;
-            MemoryStream stream = new MemoryStream();
-            speech.SetOutputToWaveStream(stream);
+            stream = new MemoryStream();
+            speech.SetOutputToWaveStream(stream);            
             speech.SpeakAsync(text);
-            stream.Flush();
-            stream.Seek(0, SeekOrigin.Begin);
-            var reader = new WaveFileReader(stream);
-            var waveOut = new WaveOut
-            {
-                DeviceNumber = device.DeviceNumber,
-            };
-            waveOut.Init(reader);
-            waveOut.Play();
+
         }
+
+        private void WaveOut_PlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            btnComms.Enabled = true;
+            btnEngage.Enabled = true;
+            btnIllegal.Enabled = true;
+            btnJail.Enabled = true;
+            btnLicenses.Enabled = true;
+            btnSeize.Enabled = true;
+            btnTicket1.Enabled = true;
+            btnTicket2.Enabled = true;
+            btnWaitTime.Enabled = true;
+            btnCustom.Enabled = true;
+            stream.Flush();
+            stream.Dispose();
+            waveOut.Dispose();
+        }
+
         private void btnEngage_Click(object sender, EventArgs e)
         {
             Speak("Hands up or be taysd");
