@@ -22,5 +22,41 @@ namespace APD_Bot.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DeviceName {
+            get {
+                return ((string)(this["DeviceName"]));
+            }
+            set {
+                this["DeviceName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int DeviceNumber {
+            get {
+                return ((int)(this["DeviceNumber"]));
+            }
+            set {
+                this["DeviceNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string VoiceName {
+            get {
+                return ((string)(this["VoiceName"]));
+            }
+            set {
+                this["VoiceName"] = value;
+            }
+        }
     }
 }

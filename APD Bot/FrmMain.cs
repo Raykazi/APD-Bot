@@ -81,31 +81,47 @@ namespace APD_Bot
         private void FrmMain_Load(object sender, EventArgs e)
         {
             SetupCharges();
-            SetupVoices();
             SetupLicenses();
             RegisterHotKeys();
+            SetupAudioDevices();
+            SetupVoices();
+        }
+
+        private void SetupAudioDevices()
+        {
             for (int n = -1; n < WaveOut.DeviceCount; n++)
             {
                 var caps = WaveOut.GetCapabilities(n);
                 cbAudio.Items.Add(new AudioDevice(caps.ProductName, n));
             }
-            cbAudio.SelectedIndex = 0;
-        }
-        private void Speak(string text)
-        {
-            //var something = cbAudio.SelectedItem;
-            MemoryStream stream = new MemoryStream();
-            speech.SetOutputToWaveStream(stream);
-            speech.SpeakAsync(text);
-            stream.Flush();
-            stream.Seek(0, SeekOrigin.Begin);
-            var reader = new WaveFileReader(stream);
-            var waveOut = new WaveOut
+            for(int i = 0; i < cbAudio.Items.Count; i++)
             {
-                //DeviceNumber = deviceNumber
-            };
-            waveOut.Init(reader);
-            waveOut.Play();
+                if (cbAudio.Items[i].ToString().Contains(Properties.Settings.Default.DeviceName))
+                    cbAudio.SelectedIndex = i;
+            }
+        }
+
+        private void SetupVoices()
+        {
+            speech = new SpeechSynthesizer();
+            speech.SpeakStarted += SpeechSynthesizerObj_SpeakStarted;
+            speech.SpeakCompleted += SpeechSynthesizerObj_SpeakCompleted;
+            foreach (InstalledVoice voice in speech.GetInstalledVoices())
+            {
+                cbVoices.Items.Add(voice.VoiceInfo.Name);
+            }
+            for (int i = 0; i < cbVoices.Items.Count; i++)
+            {
+                if (cbVoices.Items[i].ToString().Contains(Properties.Settings.Default.VoiceName))
+                    cbVoices.SelectedIndex = i;
+            }
+        }
+
+        private void SetupLicenses()
+        {
+            cbLicenses.Items.Add("Vigilante");
+            cbLicenses.Items.Add("Firearms");
+            cbLicenses.Items.Add("Worker's Protection");
         }
 
         private void RegisterHotKeys()
@@ -168,26 +184,6 @@ namespace APD_Bot
                     break;
             }
         }
-
-        private void SetupVoices()
-        {
-            speech = new SpeechSynthesizer();
-            speech.SpeakStarted += SpeechSynthesizerObj_SpeakStarted;
-            speech.SpeakCompleted += SpeechSynthesizerObj_SpeakCompleted;
-            foreach (InstalledVoice voice in speech.GetInstalledVoices())
-            {
-                cbVoices.Items.Add(voice.VoiceInfo.Name);
-            }
-            cbVoices.SelectedIndex = 0;
-        }
-
-        private void SetupLicenses()
-        {
-            cbLicenses.Items.Add("Vigilante");
-            cbLicenses.Items.Add("Firearms");
-            cbLicenses.Items.Add("Worker's Protection");
-        }
-
         private void SpeechSynthesizerObj_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
             btnComms.Enabled = true;
@@ -223,30 +219,53 @@ namespace APD_Bot
         private void cbVoices_SelectedIndexChanged(object sender, EventArgs e)
         {
             speech.SelectVoice(cbVoices.SelectedItem.ToString());
+            Properties.Settings.Default.VoiceName = cbVoices.SelectedItem.ToString();
         }
-
+        private void cbAudio_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AudioDevice device = (AudioDevice)cbAudio.SelectedItem;
+            Properties.Settings.Default.DeviceName = device.DeviceName;
+            Properties.Settings.Default.DeviceNumber = device.DeviceNumber;
+        }
+        private void Speak(string text)
+        {
+            AudioDevice device = (AudioDevice)cbAudio.SelectedItem;
+            MemoryStream stream = new MemoryStream();
+            speech.SetOutputToWaveStream(stream);
+            speech.SpeakAsync(text);
+            stream.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+            var reader = new WaveFileReader(stream);
+            var waveOut = new WaveOut
+            {
+                DeviceNumber = device.DeviceNumber,
+            };
+            waveOut.Init(reader);
+            waveOut.Play();
+        }
         private void btnEngage_Click(object sender, EventArgs e)
         {
-            speech.SpeakAsync("Hands up or be taysd");
+            Speak("Hands up or be taysd");
         }
 
         private void btnComms_Click(object sender, EventArgs e)
         {
-            speech.SpeakAsync("I'm taking your comms and GPS");
+            Speak("I'm taking your comms and GPS");
         }
 
         private void btnLicenses_Click(object sender, EventArgs e)
         {
-            speech.SpeakAsync("I'm searching for your licenses");
+            Speak("I'm searching for your licenses");
         }
 
         private void btnIllegal_Click(object sender, EventArgs e)
         {
-            speech.SpeakAsync("I'll be searching you for any illegal items");
+            Speak("I'll be searching you for any illegal items");
         }
 
         private void btnSeize_Click(object sender, EventArgs e)
         {
+            string mainMessage = "I'll be seizing your illegal contraband and weapons ";
             string additional = "along with your ";
             int count = cbLicenses.CheckedItems.Count;
             for (int i = 0; i < count; i++)
@@ -262,15 +281,16 @@ namespace APD_Bot
 
             }
             additional += (count > 1 ? " licenses " : " license");
-            speech.SpeakAsync("I'll be seizing your illegal contraband and weapons");
+
             if (count > 0)
-                speech.SpeakAsync(additional);
+                mainMessage += additional;
+            Speak(mainMessage);
         }
 
         private void btnTicket1_Click(object sender, EventArgs e)
         {
             int total = 0;
-            speech.SpeakAsync((tbName.Text.Length > 0 ? tbName.Text : "Alright you criminal dirtbag") + ", your wanted for, ");
+            string message = ((tbName.Text.Length > 0 ? tbName.Text : "Alright you criminal dirtbag") + ", your wanted for, ");
             foreach (DataGridViewRow row in dgvChargesList.Rows)
             {
                 string charge = row.Cells[0].Value.ToString();
@@ -278,33 +298,34 @@ namespace APD_Bot
                 int chargeAmount = Convert.ToInt32(row.Cells[2].Value);
                 if (counts != 0)
                 {
-                    speech.SpeakAsync($"{counts} {(counts > 1 ? "counts" : "count")} of {charge},");
+                    message += ($"{counts} {(counts > 1 ? "counts" : "count")} of {charge},");
                     total += chargeAmount * counts;
                 }
             }
-            speech.SpeakAsync(String.Format(" for a total of {0:C}. You will have two chances to pay your ticket, failure to do so will result in you being sent to jail.", total));
+            message += (String.Format(" for a total of {0:C}. You will have two chances to pay your ticket, failure to do so will result in you being sent to jail.", total));
+            Speak(message);
         }
 
         private void btnTicket2_Click(object sender, EventArgs e)
         {
-            speech.SpeakAsync("Here's your 2nd chance to pay your ticket.");
+            Speak("Here's your 2nd chance to pay your ticket.");
         }
 
         private void btnJail_Click(object sender, EventArgs e)
         {
-            speech.SpeakAsync("I'll be sending you to jail now.");
+            Speak("I'll be sending you to jail now.");
         }
 
 
         private void btnWaitTime_Click(object sender, EventArgs e)
         {
-            speech.SpeakAsync("You have 5 more seconds to pay this ticket. 5, 4, 3, 2, 1.");
+            Speak("You have 5 more seconds to pay this ticket. 5, 4, 3, 2, 1.");
         }
 
         private void btnCustom_Click(object sender, EventArgs e)
         {
             if (tbCustom.Text.Length > 0)
-                speech.SpeakAsync(tbCustom.Text);
+                Speak(tbCustom.Text);
         }
     }
 }

@@ -214,6 +214,7 @@
             this.cbAudio.Name = "cbAudio";
             this.cbAudio.Size = new System.Drawing.Size(138, 21);
             this.cbAudio.TabIndex = 0;
+            this.cbAudio.SelectedIndexChanged += new System.EventHandler(this.cbAudio_SelectedIndexChanged);
             // 
             // cbVoices
             // 
