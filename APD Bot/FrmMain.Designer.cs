@@ -51,6 +51,7 @@
             this.colCharge1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ChargeAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tbTicketAmount = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvChargesList)).BeginInit();
             this.gbConfig.SuspendLayout();
             this.SuspendLayout();
@@ -138,7 +139,7 @@
             // cbLicenses
             // 
             this.cbLicenses.FormattingEnabled = true;
-            this.cbLicenses.Location = new System.Drawing.Point(427, 147);
+            this.cbLicenses.Location = new System.Drawing.Point(425, 121);
             this.cbLicenses.Name = "cbLicenses";
             this.cbLicenses.Size = new System.Drawing.Size(136, 49);
             this.cbLicenses.TabIndex = 2;
@@ -272,6 +273,13 @@
             this.ChargeAmount.ReadOnly = true;
             this.ChargeAmount.Visible = false;
             // 
+            // tbTicketAmount
+            // 
+            this.tbTicketAmount.Location = new System.Drawing.Point(425, 176);
+            this.tbTicketAmount.Name = "tbTicketAmount";
+            this.tbTicketAmount.Size = new System.Drawing.Size(100, 20);
+            this.tbTicketAmount.TabIndex = 5;
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -279,6 +287,7 @@
             this.ClientSize = new System.Drawing.Size(591, 450);
             this.Controls.Add(this.tbCustom);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.tbTicketAmount);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.gbConfig);
             this.Controls.Add(this.dgvChargesList);
@@ -328,5 +337,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colCharge1;
         private System.Windows.Forms.DataGridViewTextBoxColumn colAmount;
         private System.Windows.Forms.DataGridViewTextBoxColumn ChargeAmount;
+        private System.Windows.Forms.TextBox tbTicketAmount;
     }
 }

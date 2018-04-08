@@ -367,7 +367,15 @@ namespace APD_Bot
                 if(oldValue !=0 )
                     dgvChargesList.Rows[e.RowIndex].Cells[1].Value = oldValue - 1;
             }
-
+            int total = 0;
+            foreach (DataGridViewRow row in dgvChargesList.Rows)
+            {
+                int counts = Convert.ToInt32(row.Cells[1].Value);
+                int chargeAmount = Convert.ToInt32(row.Cells[2].Value);
+                if (counts != 0)
+                    total += chargeAmount * counts;
+            }
+            tbTicketAmount.Text = string.Format("{0:C}", total);
         }
     }
 }
