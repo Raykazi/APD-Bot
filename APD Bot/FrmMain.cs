@@ -232,7 +232,6 @@ namespace APD_Bot
 
         private void dgvChargesList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
         private void cbVoices_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -353,6 +352,22 @@ namespace APD_Bot
         {
             if (tbCustom.Text.Length > 0)
                 Speak(tbCustom.Text);
+        }
+
+        private void dgvChargesList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0)
+            {
+                int oldValue = (int)dgvChargesList.Rows[e.RowIndex].Cells[1].Value;
+                dgvChargesList.Rows[e.RowIndex].Cells[1].Value = oldValue + 1;
+            }
+            if (e.ColumnIndex == 1)
+            {
+                int oldValue = (int)dgvChargesList.Rows[e.RowIndex].Cells[1].Value;
+                if(oldValue !=0 )
+                    dgvChargesList.Rows[e.RowIndex].Cells[1].Value = oldValue - 1;
+            }
+
         }
     }
 }
