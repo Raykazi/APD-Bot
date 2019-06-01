@@ -6,6 +6,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Collections;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace APD_Bot
 {
@@ -44,7 +45,7 @@ namespace APD_Bot
             dgvChargesList.Rows.Add(new object[] { "Drug Possession ", 0, 45000 });
             dgvChargesList.Rows.Add(new object[] { "Entering an APD controlled area", 0, 6000 });
             dgvChargesList.Rows.Add(new object[] { "Escaping from Jail", 0, 0 });
-            dgvChargesList.Rows.Add(new object[] { "Evading arrest", 0, 16500 });
+            dgvChargesList.Rows.Add(new object[] { "Resisting arrest", 0, 16500 });
             dgvChargesList.Rows.Add(new object[] { "Failure to stop at a police checkpoint (fixed or mobile)", 0, 30000 });
             dgvChargesList.Rows.Add(new object[] { "Failure to use collision lights", 0, 2000 });
             dgvChargesList.Rows.Add(new object[] { "Flying without a Pilot's License", 0, 10500 });
@@ -252,6 +253,15 @@ namespace APD_Bot
 
         }
 
+        private void SpeakAfterDelay(String text, int delay)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(delay);
+                Speak(text);
+            });
+        }
+
         private void WaveOut_PlaybackStopped(object sender, StoppedEventArgs e)
         {
             btnComms.Enabled = true;
@@ -281,7 +291,8 @@ namespace APD_Bot
 
         private void btnLicenses_Click(object sender, EventArgs e)
         {
-            Speak("I'm searching for your licenses");
+            Speak("I'm searching for your licenses.");
+            SpeakAfterDelay("Okay, I have found that your name is " + tbName.Text + ".", 6000);
         }
 
         private void btnIllegal_Click(object sender, EventArgs e)
@@ -291,7 +302,7 @@ namespace APD_Bot
 
         private void btnSeize_Click(object sender, EventArgs e)
         {
-            string mainMessage = "I'll be seizing your illegal contraband and weapons ";
+            string mainMessage = "I'll be seizing everything illegal that you may have ";
             string additional = "along with your ";
             int count = cbLicenses.CheckedItems.Count;
             for (int i = 0; i < count; i++)
@@ -334,18 +345,24 @@ namespace APD_Bot
 
         private void btnTicket2_Click(object sender, EventArgs e)
         {
-            Speak("Here's your 2nd chance to pay your ticket.");
+            Speak("Here's your 2nd chance to pay your ticket. If you don't pay it, you will be sent to jail.");
         }
 
         private void btnJail_Click(object sender, EventArgs e)
         {
-            Speak("I'll be sending you to jail now.");
+            Speak("I'll be sending you to jail now. Bye.");
         }
 
 
         private void btnWaitTime_Click(object sender, EventArgs e)
         {
-            Speak("You have 5 more seconds to pay this ticket. 5, 4, 3, 2, 1.");
+            Speak("You have 5 more seconds to pay this ticket.");
+            SpeakAfterDelay("5..", 3000);
+            SpeakAfterDelay("4..", 4100);
+            SpeakAfterDelay("3..", 5200);
+            SpeakAfterDelay("2..", 6300);
+            SpeakAfterDelay("1..", 7400);
+            SpeakAfterDelay("Time's up.", 8000);
         }
 
         private void btnCustom_Click(object sender, EventArgs e)
