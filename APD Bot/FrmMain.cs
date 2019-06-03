@@ -50,7 +50,7 @@ namespace APD_Bot
             dgvChargesList.Rows.Add(new object[] { "Failure to use collision lights", 0, 2000 });
             dgvChargesList.Rows.Add(new object[] { "Flying without a Pilot's License", 0, 10500 });
             dgvChargesList.Rows.Add(new object[] { "Flying/Hovering below 150 meters", 0, 15000 });
-            dgvChargesList.Rows.Add(new object[] { "Gang Homicide", 0, 25000 });
+            dgvChargesList.Rows.Add(new object[] { "Gang Homicide", 0, 15000 });
             dgvChargesList.Rows.Add(new object[] { "Gas Station Robbery", 0, 18750 });
             dgvChargesList.Rows.Add(new object[] { "Government Cyber Attack", 0, 30000 });
             dgvChargesList.Rows.Add(new object[] { "Grand Theft Auto", 0, 17500 });
