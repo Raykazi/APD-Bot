@@ -143,7 +143,7 @@
             this.cbLicenses.Name = "cbLicenses";
             this.cbLicenses.Size = new System.Drawing.Size(136, 79);
             this.cbLicenses.TabIndex = 2;
-            this.cbLicenses.SelectedIndexChanged += new System.EventHandler(this.CbLicenses_SelectedIndexChanged);
+
             // 
             // dgvChargesList
             // 
