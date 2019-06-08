@@ -165,6 +165,8 @@ namespace APD_Bot
 
         private void SetupLicenses()
         {
+            cbLicenses.Items.Add("Driver");
+            cbLicenses.Items.Add("Pilot");
             cbLicenses.Items.Add("Vigilante");
             cbLicenses.Items.Add("Firearms");
             cbLicenses.Items.Add("Worker's Protection");
@@ -292,34 +294,51 @@ namespace APD_Bot
         private void btnLicenses_Click(object sender, EventArgs e)
         {
             Speak("I'm searching for your licenses.");
-            SpeakAfterDelay("Okay, I have found that your name is " + tbName.Text + ".", 6000);
+            String s = "Okay, I have found that your name is " + tbName.Text;
+            if(cbLicenses.CheckedItems.Count > 0)
+            {
+                s += " from your " + cbLicenses.CheckedItems[0] + " license.";
+            }
+            if (tbName.Text.Length > 0)
+            {
+                SpeakAfterDelay(s, 6000);
+            }
         }
 
         private void btnIllegal_Click(object sender, EventArgs e)
         {
-            Speak("I'll be searching you for any illegal items");
+            Speak("I'll be searching you for any illegal items due to your outstanding charges and recent actions");
         }
 
         private void btnSeize_Click(object sender, EventArgs e)
         {
             string mainMessage = "I'll be seizing everything illegal that you may have ";
             string additional = "along with your ";
-            int count = cbLicenses.CheckedItems.Count;
-            for (int i = 0; i < count; i++)
+            ArrayList licenses = new ArrayList();
+            for (int i = 0; i < cbLicenses.CheckedItems.Count; i++)
             {
-                if (count > 1 && i >= 1 && i == (count - 1))
+                if (cbLicenses.CheckedItems[i].Equals("Driver") || cbLicenses.CheckedItems[i].Equals("Pilot"))
                 {
-                    additional += "and " + cbLicenses.CheckedItems[i];
+                    continue;
+                }
+                licenses.Add(cbLicenses.CheckedItems[i]);
+            }
+
+            for (int i = 0; i < licenses.Count; i++)
+            {
+                if (licenses.Count > 1 && i >= 1 && i == (licenses.Count - 1))
+                {
+                    additional += "and " + licenses[i];
                 }
                 else
                 {
-                    additional += cbLicenses.CheckedItems[i] + (count > 1 ? ", " : "");
+                    additional += licenses[i] + (licenses.Count > 1 ? ", " : "");
                 }
 
             }
-            additional += (count > 1 ? " licenses " : " license");
+            additional += (licenses.Count > 1 ? " licenses " : " license");
 
-            if (count > 0)
+            if (licenses.Count > 0)
                 mainMessage += additional;
             Speak(mainMessage);
         }
@@ -394,5 +413,6 @@ namespace APD_Bot
             }
             tbTicketAmount.Text = string.Format("{0:C}", total);
         }
+
     }
 }

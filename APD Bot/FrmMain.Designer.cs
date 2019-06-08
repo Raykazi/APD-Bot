@@ -38,6 +38,9 @@
             this.btnJail = new System.Windows.Forms.Button();
             this.cbLicenses = new System.Windows.Forms.CheckedListBox();
             this.dgvChargesList = new System.Windows.Forms.DataGridView();
+            this.colCharge1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ChargeAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbConfig = new System.Windows.Forms.GroupBox();
             this.lblAudio = new System.Windows.Forms.Label();
             this.lblVoices = new System.Windows.Forms.Label();
@@ -48,9 +51,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnCustom = new System.Windows.Forms.Button();
             this.tbCustom = new System.Windows.Forms.TextBox();
-            this.colCharge1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ChargeAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tbTicketAmount = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvChargesList)).BeginInit();
             this.gbConfig.SuspendLayout();
@@ -139,10 +139,11 @@
             // cbLicenses
             // 
             this.cbLicenses.FormattingEnabled = true;
-            this.cbLicenses.Location = new System.Drawing.Point(425, 121);
+            this.cbLicenses.Location = new System.Drawing.Point(425, 91);
             this.cbLicenses.Name = "cbLicenses";
-            this.cbLicenses.Size = new System.Drawing.Size(136, 49);
+            this.cbLicenses.Size = new System.Drawing.Size(136, 79);
             this.cbLicenses.TabIndex = 2;
+            this.cbLicenses.SelectedIndexChanged += new System.EventHandler(this.CbLicenses_SelectedIndexChanged);
             // 
             // dgvChargesList
             // 
@@ -159,6 +160,26 @@
             this.dgvChargesList.TabIndex = 3;
             this.dgvChargesList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvChargesList_CellContentClick);
             this.dgvChargesList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvChargesList_CellDoubleClick);
+            // 
+            // colCharge1
+            // 
+            this.colCharge1.HeaderText = "Charge";
+            this.colCharge1.Name = "colCharge1";
+            this.colCharge1.ReadOnly = true;
+            this.colCharge1.Width = 150;
+            // 
+            // colAmount
+            // 
+            this.colAmount.HeaderText = "Amount";
+            this.colAmount.Name = "colAmount";
+            this.colAmount.ReadOnly = true;
+            // 
+            // ChargeAmount
+            // 
+            this.ChargeAmount.HeaderText = "ChargeAmount";
+            this.ChargeAmount.Name = "ChargeAmount";
+            this.ChargeAmount.ReadOnly = true;
+            this.ChargeAmount.Visible = false;
             // 
             // gbConfig
             // 
@@ -252,26 +273,6 @@
             this.tbCustom.Name = "tbCustom";
             this.tbCustom.Size = new System.Drawing.Size(152, 38);
             this.tbCustom.TabIndex = 7;
-            // 
-            // colCharge1
-            // 
-            this.colCharge1.HeaderText = "Charge";
-            this.colCharge1.Name = "colCharge1";
-            this.colCharge1.ReadOnly = true;
-            this.colCharge1.Width = 150;
-            // 
-            // colAmount
-            // 
-            this.colAmount.HeaderText = "Amount";
-            this.colAmount.Name = "colAmount";
-            this.colAmount.ReadOnly = true;
-            // 
-            // ChargeAmount
-            // 
-            this.ChargeAmount.HeaderText = "ChargeAmount";
-            this.ChargeAmount.Name = "ChargeAmount";
-            this.ChargeAmount.ReadOnly = true;
-            this.ChargeAmount.Visible = false;
             // 
             // tbTicketAmount
             // 
