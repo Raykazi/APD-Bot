@@ -67,6 +67,7 @@ namespace APD_Bot
             dgvChargesList.Rows.Add(new object[] { "Obstruction of Traffic", 0, 4625 });
             dgvChargesList.Rows.Add(new object[] { "Organ Harvesting", 0, 11250 });
             dgvChargesList.Rows.Add(new object[] { "Party to a crime", 0, 15000 });
+            dgvChargesList.Rows.Add(new object[] { "Possession of contraband", 0, 31500 });
             dgvChargesList.Rows.Add(new object[] { "Possession of A.P.D. equipment", 0, 25500 });
             dgvChargesList.Rows.Add(new object[] { "Possession of an Illegal organ", 0, 22500 });
             dgvChargesList.Rows.Add(new object[] { "Possession of firearm w/o a License", 0, 11000 });
